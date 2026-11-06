@@ -8,17 +8,60 @@
 </head>
 
 <body>
+    <h1>Sign up</h1>
     <form id="phoneform" novalidate>
-        <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" name="phone" inputmode="numeric" autocomplete="tel"
+        <label for="phone1">Phone Number</label>
+        <input type="tel" id="phone1" name="phone1" inputmode="numeric" autocomplete="tel"
             placeholder="+7 (___) ___-__-__" maxlength="18">
-        <span id="phoneError" style="color: red"></span>
+        <span id="phoneError1" style="color: red"></span>
+        <label for="logination1">Login</label>
+        <input type="login" id="login1" name="login1" inputmode="text" autocomplete="text" placeholder="login">
+        <span id="loginError1" style="color:red"></span>
+        <label for="emailination1">Email</label>
+        <input type="email" id="email1" name="email1" inputmode="text" autocomplete="text" placeholder="@mail.com">
+        <span id="emailError1" style="color:red"></span>
+        <label for="passwordination2">Password</label>
+        <input type="password" id="password1" name="password1" inputmode="text" autocomplete="text"
+            placeholder="password">
+        <span id="passError1" style="color:red"></span>
+        <button type="submit">Send</button>
+    </form>
+    <h1>Sign in</h1>
+    <form id="loginform" novalidate>
+        <label for="phone2">Phone Number</label>
+        <input type="tel" id="phone2" name="phone2" inputmode="numeric" autocomplete="tel"
+            placeholder="+7 (___) ___-__-__" maxlength="18">
+        <span id="phoneError2" style="color: red"></span>
+        <label for="logination2">Login</label>
+        <input type="login" id="login2" name="login2" inputmode="text" autocomplete="text" placeholder="login">
+        <span id="loginError1" style="color:red"></span>
+        <label for="emailination2">Email</label>
+        <input type="email" id="email2" name="email2" inputmode="text" autocomplete="text" placeholder="@mail.com">
+        <span id="emailError2" style="color:red"></span>
+        <label for="passwordination2">Password</label>
+        <input type="password" id="password2" name="password2" inputmode="text" autocomplete="text"
+            placeholder="password">
+        <span id="passError2" style="color:red"></span>
         <button type="submit">Send</button>
     </form>
     <script>
         PHONE_RU_REGEX = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/
-        const input = document.getElementById('phone')
-        const errorE1 = document.getElementById('phoneError')
+        const input1 = document.getElementById('phone1')
+        const input2 = document.getElementById('phone2')
+        const inputlog1 = document.getElementById('login1')
+        const inputlog2 = document.getElementById('login2')
+        const inputmail1 = document.getElementById('email1')
+        const inputmail2 = document.getElementById('email2')
+        const inputpass1 = document.getElementById('password1')
+        const inputpass2 = document.getElementById('password2')
+        const errorE11 = document.getElementById('phoneError1')
+        const errorE12 = document.getElementById('phoneError2')
+        const errorE21 = document.getElementById('loginError1')
+        const errorE22 = document.getElementById('loginError2')
+        const errorE31 = document.getElementById('emailError1')
+        const errorE32 = document.getElementById('emailError2')
+        const errorE41 = document.getElementById('passError1')
+        const errorE42 = document.getElementById('passError2')
         function extractDigits(value) {
             let digits = value.replace(/\D/g, '');
 
@@ -40,13 +83,13 @@
             return out;
         }
 
-        input.addEventListener('input', (e) => {
+        input1.addEventListener('input', (e) => {
             const MIN_CURSOR = 4;
 
-            const digitsBefore = input.value.slice(0, input.selectionStart).replace(/\D/g, '').length;
+            const digitsBefore = input1.value.slice(0, input1.selectionStart).replace(/\D/g, '').length;
 
             const formatted = formalPhoneRu(extractDigits(e.target.value));
-            input.value = formatted;
+            input1.value = formatted;
 
             let seen = 0; pos = 0;
             for (let i = 0; i < formatted.length && seen < digitsBefore; i++) {
@@ -54,30 +97,104 @@
                 pos = i + 1;
             }
 
-            input.setSelectionRange(Math.min(pos, MIN_CURSOR));
+            input1.setSelectionRange(Math.min(pos, MIN_CURSOR));
+        });
+        input2.addEventListener('input', (e) => {
+            const MIN_CURSOR = 4;
+
+            const digitsBefore = input2.value.slice(0, input2.selectionStart).replace(/\D/g, '').length;
+
+            const formatted = formalPhoneRu(extractDigits(e.target.value));
+            input2.value = formatted;
+
+            let seen = 0; pos = 0;
+            for (let i = 0; i < formatted.length && seen < digitsBefore; i++) {
+                if (/\d/.test(formatted[i])) seen++;
+                pos = i + 1;
+            }
+
+            input2.setSelectionRange(Math.min(pos, MIN_CURSOR));
         });
         document.getElementById('phoneform').addEventListener('submit', async (e) => {
             e.preventDefault();
-            errorE1.textContent = '';
+            errorE11.textContent = '';
+            errorE21.textContent = '';
+            errorE31.textContent = '';
+            errorE41.textContent = '';
 
-            const value = input.value.trim();
+            const value1 = input1.value.trim();
 
-            if (!PHONE_RU_REGEX.test(value)) {
-                errorE1.textContent = "Input a phone number";
+            if (!PHONE_RU_REGEX.test(value1)) {
+                errorE11.textContent = "Input a phone number";
+                input.focus();
+                return
+            }
+        
+            if (!inputlog1.value) {
+                errorE21.textContent = "Input a login"
+                input.focus();
+                return
+            }
+            if (!inputmail1.value) {
+                errorE31.textContent = "Input a correct email"
+                input.focus();
+                return
+            }
+            if (!inputpass1.value) {
+                errorE41.textContent = "Input a password"
                 input.focus();
                 return
             }
 
-            const res = await fetch('/api/users', {
+            const res = await fetch('http://localhost:5500/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: value })
+                body: JSON.stringify({ phone: value1, login: inputlog1.value, email: inputmail1.value, password: inputpass1.value})
             })
 
             if (!res.ok) {
                 const data = await
                     res.json().catch(() => { { } });
-                errorE1.textContent = data.error || 'Server error'
+                errorE11.textContent = data.error || 'Server error'
+            }
+        })
+        document.getElementById('loginform').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const value2 = input2.value.trim();
+
+            if (!PHONE_RU_REGEX.test(value2)) {
+                errorE12.textContent = "Input a phone number";
+                input.focus();
+                return
+            }
+        
+            if (!inputlog2.value) {
+                errorE22.textContent = "Input a login"
+                input.focus();
+                return
+            }
+            if (!inputmail2.value) {
+                errorE32.textContent = "Input a correct email"
+                input.focus();
+                return
+            }
+            if (!inputpass2.value) {
+                errorE42.textContent = "Input a password"
+                input.focus();
+                return
+            }
+
+            const res = await fetch('http://localhost:5500/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: value2, login: inputlog2.value, email: inputmail2.value, password: inputpass2.value})
+            })
+console.log(res.json())
+            if (!res.ok) {
+                const data = await
+                    res.json().catch(() => { { } });
+                errorE11.textContent = data.error || 'Server error'
             }
         })
     </script>

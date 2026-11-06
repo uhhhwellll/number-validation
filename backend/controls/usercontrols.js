@@ -44,7 +44,7 @@ exports.register = async (req, res) => {
         const hashed = bcrypt.hashSync(password, 7)
         const newuser = await User.create({ login, email, password: hashed, phone })
         const token = genJWT({ login: newuser.login, email: newuser.email, phone: newuser.phone });
-        return res.status(200).json({ message: 'user created' }, token)
+        return res.status(200).json({ message: 'user created', token})
 
     } catch (error) {
         return res.status(500)
@@ -65,7 +65,7 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'incorrect login or password inputs' })
         }
         const token = genJWT({ login: candidate.login, email: candidate.email, phone: candidate.phone })
-        return res.status(200).json({ message: 'user authorized' }, token)
+        return res.status(200).json({ message: 'user authorized',token})
     } catch (error) {
         return res.status(500)
     }
