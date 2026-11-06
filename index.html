@@ -151,7 +151,6 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phone: value1, login: inputlog1.value, email: inputmail1.value, password: inputpass1.value})
             })
-
             if (!res.ok) {
                 const data = await
                     res.json().catch(() => { { } });
@@ -190,12 +189,15 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phone: value2, login: inputlog2.value, email: inputmail2.value, password: inputpass2.value})
             })
-console.log(res.json())
+            console.log(res);
             if (!res.ok) {
                 const data = await
                     res.json().catch(() => { { } });
                 errorE11.textContent = data.error || 'Server error'
             }
+            const data = await res.json()
+            console.log(data);
+            return res.status(200).json({message:'token', token:data.token})
         })
     </script>
 </body>
